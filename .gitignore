@@ -1,0 +1,13 @@
+sim/work/
+sim/work_cov/
+sim/*.log
+sim/*.wlf
+sim/transcript
+sim/result_summary.txt
+cov/*.ucdb
+cov/html/
+transcript
+modelsim.ini
+*.wlf
+__pycache__/
+.vscode/svlangserver/
