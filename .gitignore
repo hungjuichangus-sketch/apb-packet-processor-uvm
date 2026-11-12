@@ -11,3 +11,4 @@ modelsim.ini
 *.wlf
 __pycache__/
 .vscode/svlangserver/
+sim/work_lint/
