@@ -8,10 +8,10 @@ WORK_COV := sim/work_cov
 
 # Design and testbench sources; grows lab by lab.
 RTL      := $(wildcard rtl/*.sv)
-TB_SRC   := tb/smoke_tb.sv
+TB_SRC   := tb/smoke_tb.sv tb/packet_sram_tb.sv tb/apb_slave_if_tb.sv
 
 # Every testbench top listed here is run by `make regress` / `make cov`.
-TESTS    := smoke_tb
+TESTS    := smoke_tb packet_sram_tb apb_slave_if_tb
 
 COV_TYPES := bcesfx
 
