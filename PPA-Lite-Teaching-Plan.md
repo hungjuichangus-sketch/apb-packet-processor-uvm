@@ -9,7 +9,7 @@ Spec terms are kept in the original Chinese/English wording of those documents.
 |---|---|
 | Language | English explanations; original spec terms and SV/UVM keywords kept as written |
 | Goal | Self-study, target **100/100 on every Lab** (3 mandatory + 2 optional items each), so the optional dependencies (Lab1 opt 4/5 → Lab3 opt 4/5 → Lab4 opt 5) all hold |
-| Teaching style | **Coach:** you write the core RTL and testbench; I give skeletons, hints, reviews, run simulations, explain waveforms |
+| Teaching style | **Coach:** you write the testbench; I give skeletons, hints, reviews, run simulations, explain waveforms. **Changed 2026-11-02:** I write the RTL for M1, M3 and `ppa_top` (you wrote M2); you verify them from the spec and the decision register, not by reading the RTL |
 | License gap | **Hybrid:** labs run locally with `$urandom` stimulus and hand-rolled coverage counters; `randomize()` / `covergroup` are practised in short exercises on EDA Playground |
 | No TA / course group | The course material comes from an open class, so there is no teaching assistant to ask. I am the only teacher and also play the TA in mock acceptances. Every spec gap in §6 is decided between us and written into the lab report |
 | Coding style | 4 spaces per indent level in all SV code (Makefile recipes keep tabs) |
@@ -119,17 +119,26 @@ Decide each at the start of the stated session. "Lean" is my starting suggestion
 | ID | Where | Question | Lean |
 |---|---|---|---|
 | D1 | S1.1 | Byte lane mapping of a 32-bit word | **DECIDED:** Byte0 = `[31:24]` (Appendix A) |
-| D2 | S1.3 | PRDATA registered or combinational; SRAM read must start in SETUP to return data in ACCESS | CSR read mux combinational; issue `pkt_mem_re_o` in SETUP |
-| D3 | S1.2 | Misaligned `PADDR[1:0]≠0` | Ignore low bits (our decision to confirm in S1.2) |
-| D4 | S1.2 | §8.3 lists W1P as "read-only" for PSLVERR, but Appendix A writes CTRL=0x3 to start | PSLVERR only for pure-RO registers and reserved / undefined addresses |
-| D5 | S1.2 | `start` written with `enable=0` or `busy=1` | Silently ignored, PSLVERR=0 |
-| D6 | S1.3 | IRQ "rising edge, same beat" | Decide on paper with a timing diagram |
+| D2 | S1.3 | PRDATA registered or combinational; SRAM read must start in SETUP to return data in ACCESS | **DECIDED:** CSR read mux combinational; `pkt_mem_re_o` raised in SETUP; PRDATA is 0 outside a read transfer |
+| D3 | S1.2 | Misaligned `PADDR[1:0]≠0` | **DECIDED (changed from "ignore low bits"):** misaligned access returns PSLVERR=1 with no side effect. Reason: §4.2 makes `0x05D`–`0x05F` an error, which "ignore low bits" would contradict |
+| D4 | S1.2 | §8.3 lists W1P as "read-only" for PSLVERR, but Appendix A writes CTRL=0x3 to start | **DECIDED:** PSLVERR only for pure-RO registers (STATUS, RES_*, ERR_FLAG) and reserved / undefined addresses. CTRL, CFG, IRQ_EN, IRQ_STA, PKT_LEN_EXP are writable |
+| D5 | S1.2 | `start` written with `enable=0` or `busy=1` | **DECIDED:** silently ignored, PSLVERR=0 |
+| D6 | S1.3 | IRQ "rising edge, same beat" | **DECIDED:** the flag is set at the edge ending the cycle where `done_i` first reads 1, and `IRQ_STA` / `irq_o` already show it in that same cycle (combinational term) |
 | D7 | S2.1 | Words read and sum / XOR value when `pkt_len` is 0–3 or 33–255 | Clamp to at least 1 and at most 8 words; hold sum / XOR at 0; document it |
 | D8 | S2.1 | `exp_pkt_len=0` means "not configured"? | Yes, check disabled |
 | D9 | S2.1 | busy timing vs 1-cycle SRAM latency | `busy_o=1` the cycle after `start_i` is sampled |
 | D10 | S2.3 | Non-zero `flags` | Not checked |
 | D11 | S2.2 | IDLE `done_o` wording differs between §7.2 and §7.4 | IDLE is reachable only from reset, so `done_o=0` |
 | D12 | S3.1 | M1 outputs `enable_o`, `done_irq_en_o`, `err_irq_en_o` have no consumer in the spec | Used inside M1 only; left unconnected in `ppa_top` (see `doc/port-connections.md`) |
+
+Added while writing M1 (2026-11-02), all **DECIDED**:
+
+| ID | Question | Decision |
+|---|---|---|
+| D13 | When is `PSLVERR` driven | Only in the ACCESS cycle (`PSEL && PENABLE`); 0 in SETUP and idle. Reads of reserved / undefined addresses also give PSLVERR=1 and PRDATA=0 |
+| D14 | `start` with `enable` written in the same write (`CTRL=0x3` from reset) | `enable` is taken as its value **before** the write, so the first `0x3` does not start. Appendix A writes enable first, then start |
+| D15 | `start_o` timing, and set/clear collision on `IRQ_STA` | `start_o` is a registered 1-cycle pulse, one cycle after the ACCESS that accepted it. A simultaneous event and clear: the event wins |
+| D16 | CFG / IRQ_EN / PKT_LEN_EXP writes while `busy=1` | Allowed (spec only restricts PKT_MEM) |
 
 Documented typo: Appendix B.3 says the correct `hdr_chk` for `04_01_00_FF` is 0x00; it is 0x05. The conclusion (chk_error) still holds.
 
