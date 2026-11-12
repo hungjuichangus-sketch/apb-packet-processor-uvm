@@ -1,6 +1,6 @@
 # Test plan: M1 `apb_slave_if`
 
-Source: spec v1.02 sections 4, 5, 6, 8 and the decisions D2-D6, D13-D16 in `PPA-Lite-Teaching-Plan.md` section 6.
+Source: spec v1.02 sections 4, 5, 6, 8 and the decisions D2-D6, D13-D16 in `doc/design-decisions.md`.
 Write this plan from the **spec only**. Do not read `rtl/apb_slave_if.sv` while writing tests.
 
 ## How to fill this plan

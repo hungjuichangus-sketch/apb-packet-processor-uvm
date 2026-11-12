@@ -1,6 +1,6 @@
 // M1: apb_slave_if -- APB 3.0 slave, all CSRs, PKT_MEM window control, IRQ.
 // Spec: PPA-Lite requirements v1.02, sections 4 (APB), 5 (CSR), 6 (PKT_MEM), 8 (IRQ, PSLVERR).
-// Design decisions D2..D15 are recorded in PPA-Lite-Teaching-Plan.md section 6.
+// Design decisions D2..D16 are recorded in doc/design-decisions.md.
 //
 // APB timing used here (PREADY = 1, so every transfer is exactly SETUP + ACCESS):
 //   write : everything takes effect at the clock edge that ends ACCESS.
