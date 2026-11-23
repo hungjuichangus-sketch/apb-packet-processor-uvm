@@ -42,9 +42,9 @@ That lets you create any M3 situation (error, done, busy) on demand.
 
 | ID | Feature | Spec | How checked | Test | Status |
 |---|---|---|---|---|---|
-| A1 |After reset, CTRL reads 0 |5.2 |Reset, read 0x000, expect 32'h0| | TODO |
-| A2 |After reset, CFG reads 32'h0000_00F1 |5.2 |Reset, read 0x004 expect 32'h0000_00F1 | | TODO |
-| A3 |After reset, STATUS reads 0 |5.2 |Reset, read 0x008 expect 32'h0 | | TODO |
+| A1 |After reset, CTRL reads 0 |5.2 |Reset, read 0x000, expect 32'h0| | Done |
+| A2 |After reset, CFG reads 32'h0000_00F1 |5.2 |Reset, read 0x004 expect 32'h0000_00F1 | | Done |
+| A3 |After reset, STATUS reads 0 |5.2 |Reset, read 0x008 expect 32'h0 | | Done |
 | A4 | | | | | TODO |
 | A5 | | | | | TODO |
 | A6 | | | | | TODO |
