@@ -10,4 +10,8 @@ package m1_pkg;
     `include "m1_reset_seq.sv"
     `include "m1_base_test.sv"
     `include "m1_reset_test.sv"
+    `include "m1_cfg_algo_mode_seq.sv"
+    `include "m1_cfg_algo_mode_test.sv"
+    `include "m1_cfg_type_mask_seq.sv"
+    `include "m1_cfg_type_mask_test.sv"
 endpackage
